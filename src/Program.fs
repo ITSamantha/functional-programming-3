@@ -1,37 +1,13 @@
 ﻿open Interpolation
-
+open Utils
 open Plotly.NET
 
-let (|IsLinear|_|) (s: string) =
-    if s.Equals("linear") then Some Linear else None
-
-let (|IsLagrange|_|) (s: string) =
-    match s.Split("=") with
-    | [| "lagrange"; value |] ->
-        match Parser.tryParseInt16 value with
-        | Some(int) -> Some(Lagrange(int))
-        | None -> None
-    | _ -> None
-
-let parseCLIArgMethod (s: string) =
-    match s with
-    | IsLinear m -> Ok m
-    | IsLagrange m -> Ok m
-    | _ -> Error(sprintf "Unknown arg %s" s)
-
-let readLines =
-    Seq.initInfinite (fun _ ->
-        try
-            System.Console.ReadLine()
-        with ex ->
-            null)
-    |> Seq.takeWhile (not << isNull)
 
 [<EntryPoint>]
 let main (args) =
     let parsedStep = Parser.tryParseFloat args[0]
 
-    let parsedMethods = args |> Seq.skip 1 |> Seq.map parseCLIArgMethod
+    let parsedMethods = args |> Seq.skip 1 |> Seq.map Utils.parseArgumentMethod
 
     if parsedStep.IsSome && parsedMethods |> Seq.forall Result.isOk then
         let step = parsedStep.Value
@@ -40,7 +16,7 @@ let main (args) =
         printfn "methods: %A" methods
 
         let points =
-            readLines
+            Utils.readLines
             |> Seq.map Validator.parseAndValidate
             |> Seq.choose (fun parseRes ->
                 match parseRes with

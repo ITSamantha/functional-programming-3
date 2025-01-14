@@ -4,11 +4,13 @@ type InterpolationMethod =
     | Lagrange of power: int16
     | Linear
 
+// Количество точек для методов
 let getPointSize m =
     match m with
     | Lagrange pow -> int pow
     | Linear -> 2
 
+// Выполняет интерполяцию на основе заданного метода и набора точек.
 let interpolation method points =
     match method with
     | Linear ->
@@ -30,6 +32,7 @@ let interpolation method points =
                    |> Seq.reduce (*)))
             |> Seq.sum
 
+// Выполняет интерполяцию с шагом step для заданных точек
 let interpolate method step points =
     let startX, startY = Seq.head points
     let finishX, finishY = Seq.last points
