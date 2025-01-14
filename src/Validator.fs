@@ -15,7 +15,7 @@ type ErrorType =
 // Функция для преобразования ошибки в строку
 let errorToString error =
     match error with
-    | InvalidData(name, value) -> sprintf "Parse error at %s: %s" name value
+    | InvalidData(name, value) -> sprintf "Unable to parse value %s: %s" name value
     | LineFormat(expected, value) -> sprintf "Wrong line format, expected '%s', got '%s'" expected value
 
 // Функция для проверки, что строка является допустимым числом с плавающей запятой

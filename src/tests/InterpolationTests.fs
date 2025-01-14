@@ -9,11 +9,11 @@ open System.Collections.Generic
 
 let checkFunction f methods points =
     interpolateStream points methods 0.1
-    |> Seq.iter (fun out_seq ->
-        out_seq
-        |> Seq.iter (fun maybe_points ->
-            match maybe_points with
-            | Some out_seq -> out_seq |> Seq.iter (fun (x, y) -> Assert.True(abs (f x - y) <= 0.1))
+    |> Seq.iter (fun seq ->
+        seq
+        |> Seq.iter (fun possiblePoints ->
+            match possiblePoints with
+            | Some seq -> seq |> Seq.iter (fun (x, y) -> Assert.True(abs (f x - y) <= 0.1))
             | None -> ()))
 
 [<Property>]

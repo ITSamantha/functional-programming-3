@@ -19,11 +19,11 @@ let main (args) =
         let points =
             Utils.readLines
             |> Seq.map Validator.parseAndValidate
-            |> Seq.choose (fun parseRes ->
-                match parseRes with
+            |> Seq.choose (fun parseResult ->
+                match parseResult with
                 | Ok point -> Some point
                 | Error errList ->
-                    printfn "Found errors:"
+                    printfn "Errors list:"
 
                     errList
                     |> Seq.map Validator.errorToString
@@ -35,16 +35,16 @@ let main (args) =
             |> Seq.cache
 
         interpolateStream points methods step
-        |> Seq.iter (fun out_seq ->
-            out_seq
+        |> Seq.iter (fun seq ->
+            seq
             |> Seq.zip methods
-            |> Seq.iter (fun (m, maybe_points) ->
-                match maybe_points with
-                | Some out_seq ->
+            |> Seq.iter (fun (m, possiblePoints) ->
+                match possiblePoints with
+                | Some seq ->
                     printfn "%A" m
-                    out_seq |> Seq.map fst |> Seq.iter (printf "%0.2f\t")
+                    seq |> Seq.map fst |> Seq.iter (printf "%0.2f\t")
                     printfn ""
-                    out_seq |> Seq.map snd |> Seq.iter (printf "%0.2f\t")
+                    seq |> Seq.map snd |> Seq.iter (printf "%0.2f\t")
                     printfn "\n"
                 | None -> ()))
 
@@ -60,5 +60,5 @@ let main (args) =
             | Error s -> Some s)
         |> Seq.iter (printfn "%s")
 
-        printfn "Usage: step interpolate [linear|lagrange={int16}]..."
+        printfn "Expected: step interpolate [linear|lagrange={int16}]..."
         0
