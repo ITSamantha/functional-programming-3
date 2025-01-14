@@ -2,18 +2,19 @@
 open Utils
 open Plotly.NET
 
-
 [<EntryPoint>]
 let main (args) =
-    let parsedStep = Parser.tryParseFloat args[0]
+    let stepArg = Parser.tryParseFloat args[0]
 
-    let parsedMethods = args |> Seq.skip 1 |> Seq.map Utils.parseArgumentMethod
+    let methodsArg = args |> Seq.skip 1 |> Seq.map Utils.parseArgumentMethod
 
-    if parsedStep.IsSome && parsedMethods |> Seq.forall Result.isOk then
-        let step = parsedStep.Value
-        let methods = parsedMethods |> Seq.choose Result.toOption
-        printfn "step: %.2f" step
-        printfn "methods: %A" methods
+    if stepArg.IsSome && methodsArg |> Seq.forall Result.isOk then
+
+        let step = stepArg.Value
+        printfn "1. Chosen step: %.2f" step
+
+        let methods = methodsArg |> Seq.choose Result.toOption
+        printfn "2. Chosen methods: %A" methods
 
         let points =
             Utils.readLines
@@ -49,10 +50,10 @@ let main (args) =
 
         0
     else
-        if parsedStep.IsNone then
+        if stepArg.IsNone then
             printfn "Unexpected step value: %s" args[0]
 
-        parsedMethods
+        methodsArg
         |> Seq.choose (fun r ->
             match r with
             | Ok r -> None

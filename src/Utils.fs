@@ -2,10 +2,10 @@ module Utils
 
 open Interpolation
 
-let (|IsLinear|_|) (s: string) =
+let (|IsLinearMethod|_|) (s: string) =
     if s.Equals("linear") then Some Linear else None
 
-let (|IsLagrange|_|) (s: string) =
+let (|IsLagrangeMethod|_|) (s: string) =
     match s.Split("=") with
     | [| "lagrange"; value |] ->
         match Parser.tryParseInt16 value with
@@ -15,8 +15,8 @@ let (|IsLagrange|_|) (s: string) =
 
 let parseArgumentMethod (s: string) =
     match s with
-    | IsLinear m -> Ok m
-    | IsLagrange m -> Ok m
+    | IsLinearMethod m -> Ok m
+    | IsLagrangeMethod m -> Ok m
     | _ -> Error(sprintf "Unknown arg %s" s)
 
 let readLines =

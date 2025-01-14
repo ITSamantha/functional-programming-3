@@ -5,7 +5,7 @@ module Validator
 #endif
 open FsToolkit.ErrorHandling
 
-// Активный паттерн
+
 let (|CanBeFloat|_|) (input: string) = Parser.tryParseFloat input
 
 type ErrorType =
@@ -19,15 +19,15 @@ let errorToString error =
     | LineFormat(expected, value) -> sprintf "Wrong line format, expected '%s', got '%s'" expected value
 
 // Функция для проверки, что строка является допустимым числом с плавающей запятой
-let validateFloat (s: string) =
-    match s with
-    | CanBeFloat s -> Ok s
-    | _ -> Error(InvalidData("Float", s))
+let validateFloat (input: string) =
+    match input with
+    | CanBeFloat input -> Ok input
+    | _ -> Error(InvalidData("Float", input))
 
-let splitLine (s: string) =
-    match s.Split() with
+let splitLine (input: string) =
+    match input.Split() with
     | [| left; right |] -> Ok(left, right)
-    | _ -> Error([ LineFormat("Float Float", s) ])
+    | _ -> Error([ LineFormat("Float Float", input) ])
 
 // Функция для парсинга и валидации двух строковых аргументов как чисел с плавающей запятой
 let parseFloatArgs (left: string) (right: string) =
@@ -37,8 +37,8 @@ let parseFloatArgs (left: string) (right: string) =
         return (validLeft, validRight)
     }
 
-let parseAndValidate s =
+let parseAndValidate (input: string) =
     result {
-        let! (left, right) = splitLine s
+        let! (left, right) = splitLine input
         return! parseFloatArgs left right
     }
