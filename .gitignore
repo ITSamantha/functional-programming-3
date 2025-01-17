@@ -4,3 +4,4 @@ src/.vs
 
 src/tests/bin
 src/tests/obj
+.idea
